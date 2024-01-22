@@ -16,7 +16,7 @@ webUI:
     pullPolicy: Allways
     tag: "latest"
   service:
-    type: LoadBalancer
+    type: ClusterIP
     port: 80
 
 # Parameter Page GraphQL API
@@ -27,7 +27,7 @@ API:
     pullPolicy: Allways
     tag: "latest"
   service:
-    type: LoadBalancer
+    type: ClusterIP
     port: 4000
 
 # Parameter Page gRPC
