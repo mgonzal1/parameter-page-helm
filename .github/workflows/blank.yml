@@ -1,0 +1,43 @@
+name: Integration Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Integration-Testing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.5.0
+
+      - name: Restrict access to kubeconfig # https://github.com/helm/helm/issues/9115
+        run: chmod 600 ~/.kube/config
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+
+
+      - name: Install Parameter Page
+        run: |
+          helm dependency build
+          helm upgrade --install parameter-page .
+          kubectl wait --timeout=60s --for=condition=ready --all pod
+
+      - name: Run integration test
+        run: |
+          helm test parameter-page
+
+      - name: Dump logs
+        if: always()
+        run: |
+          kubectl cluster-info dump --all-namespaces --output-directory cluster-info-dump
+          
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-kubernetes-cluster-info-dump-${{ matrix.arch }}
+          path: cluster-info-dump
+          retention-days: 7
