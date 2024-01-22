@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parameter-page
+  labels:
+    {{- include "parameter-page.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: parameter-page
+spec:
+
+  replicas: {{ .Values.webUI.replicaCount }}
+
+  selector:
+    matchLabels:
+      {{- include "parameter-page.selectorLabels" . | nindent 6 }}
+      
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "parameter-page.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: parameter-page
+          image: "{{ .Values.webUI.image.repository }}:{{ .Values.webUI.image.tag}}"
+          imagePullPolicy: {{ .Values.webUI.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.webUI.service.port }}
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/assets/.env
+              name: env-configmap
+              subPath: .env
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: {{ include "parameter-page.fullname" . }}-env
+          name: env-configmap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "parameter-page.fullname" . }}-env
+data:
+  .env: |
+    PARAM_GRAPHQL_URL={{ .Values.API.URL  }}

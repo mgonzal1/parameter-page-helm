@@ -1,0 +1,53 @@
+# MIT License
+#
+# Copyright (c) 2024 Fermilab Accelerator Controls
+#
+# Default values for parameter-page.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+
+# Parameter Page Web UI
+webUI:
+  replicaCount: 1
+  image:
+    repository: adregistry.fnal.gov/applications/parameter-page
+    pullPolicy: Allways
+    tag: "latest"
+  service:
+    type: LoadBalancer
+    port: 80
+
+# Parameter Page GraphQL API
+API:
+  URL: http://parameter-page-api:4000/graphql/
+  image:
+    repository: adregistry.fnal.gov/applications/parameter-page-api
+    pullPolicy: Allways
+    tag: "latest"
+  service:
+    type: LoadBalancer
+    port: 4000
+
+# Parameter Page gRPC
+gRPC:
+  image:
+    repository: adregistry.fnal.gov/applications/grpc-parameter-page-db
+    pullPolicy: Allways
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 50051
+
+postgreSQL:
+  # Create a postgresql database
+  enabled: true
+  image:
+    registry: adregistry.fnal.gov
+    repository: external/postgresql
+  auth:
+    postgresPassword: "test"
+    username: "test"
+    password: "test"
+    database: "adbs"

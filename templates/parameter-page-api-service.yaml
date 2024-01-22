@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: parameter-page-api
+  labels:
+    {{- include "parameter-page.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: parameter-page-api
+spec:
+  type: {{ .Values.API.service.type }}
+  ports:
+    - port: {{ .Values.API.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "parameter-page.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/instance: parameter-page-api

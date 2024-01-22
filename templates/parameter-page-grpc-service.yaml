@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: parameter-page-grpc
+  labels:
+    {{- include "parameter-page.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: parameter-page-grpc
+spec:
+  type: {{ .Values.gRPC.service.type }}
+  ports:
+    - port: {{ .Values.gRPC.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "parameter-page.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/instance: parameter-page-grpc

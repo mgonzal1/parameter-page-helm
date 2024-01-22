@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parameter-page-grpc
+  labels:
+    {{- include "parameter-page.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: parameter-page-grpc
+spec:
+
+  replicas: {{ .Values.gRPC.replicaCount }}
+
+  selector:
+    matchLabels:
+      {{- include "parameter-page.selectorLabels" . | nindent 6 }}
+      
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "parameter-page.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: parameter-page-grpc
+          image: "{{ .Values.gRPC.image.repository }}:{{ .Values.gRPC.image.tag}}"
+          imagePullPolicy: {{ .Values.gRPC.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.gRPC.service.port }}
+          volumeMounts:
+            - mountPath: /app/application.properties
+              name: parameter-page-grpc-config-volume
+              subPath: application.properties
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: parameter-page-grpc-env
+            items:
+              - key: application.properties
+                path: application.properties
+
+          name: parameter-page-grpc-config-volume
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: parameter-page-grpc-env
+data:
+  application.properties: |
+    database.url=jdbc:postgresql://postgresql/{{ .Values.postgreSQL.auth.database }}
+    database.username={{ .Values.postgreSQL.auth.username }}
+    database.password={{ .Values.postgreSQL.auth.password }}
+    grpcServer.port= {{ .Values.gRPC.service.port }}

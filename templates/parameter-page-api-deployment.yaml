@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parameter-page-api
+  labels:
+    {{- include "parameter-page.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: parameter-page-api
+spec:
+
+  replicas: {{ .Values.API.replicaCount }}
+
+  selector:
+    matchLabels:
+      {{- include "parameter-page.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/instance: parameter-page-api
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "parameter-page.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/instance: parameter-page-api
+    spec:
+      containers:
+        - name: parameter-page-api
+          image: "{{ .Values.API.image.repository }}:{{ .Values.API.image.tag}}"
+          imagePullPolicy: {{ .Values.API.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.API.service.port }}
+          env:
+            - name: Param_gRPCServer_URL
+              value: 'grpc-parameter-page-db-service:50051'
+            - name: Param_graphQLServer_Port
+              value: {{ quote  .Values.API.service.port }}
+

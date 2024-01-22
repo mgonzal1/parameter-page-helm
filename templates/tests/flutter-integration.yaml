@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "parameter-page-test-integration"
+  labels:
+    {{- include "parameter-page.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: parameter-page-test-integration
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: flutter-test
+      image: adregistry.fnal.gov/applications/parameter-page-test:latest
+  restartPolicy: Never
