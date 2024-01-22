@@ -23,8 +23,9 @@ jobs:
         run: |
           helm dependency build
           helm upgrade --install parameter-page .
-          kubectl wait --timeout=60s --for=condition=ready --all pod
+          kubectl wait --timeout=120s --for=condition=ready --all pod
           kubectl get pods
+          kubectl get svc
 
       - name: Run integration test
         run: |
