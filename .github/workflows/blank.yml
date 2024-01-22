@@ -24,11 +24,17 @@ jobs:
           helm dependency build
           helm upgrade --install parameter-page .
           kubectl wait --timeout=60s --for=condition=ready --all pod
+          kubectl get pods
 
       - name: Run integration test
         run: |
           helm test parameter-page
 
+      - name: Results
+        if: always()
+        run: |
+            kubectl logs parameter-page-test-integration 
+            
       - name: Dump logs
         if: always()
         run: |
