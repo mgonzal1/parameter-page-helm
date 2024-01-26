@@ -32,7 +32,7 @@ spec:
               containerPort: {{ .Values.API.service.port }}
           env:
             - name: Param_gRPCServer_URL
-              value: 'grpc-parameter-page-db-service:50051'
+              value: 'parameter-page-grpc:50051'
             - name: Param_graphQLServer_Port
               value: {{ quote  .Values.API.service.port }}
 
