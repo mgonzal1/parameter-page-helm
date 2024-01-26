@@ -51,7 +51,7 @@ metadata:
   name: parameter-page-grpc-env
 data:
   application.properties: |
-    database.url=jdbc:postgresql://postgresql/{{ .Values.postgreSQL.auth.database }}
-    database.username={{ .Values.postgreSQL.auth.username }}
-    database.password={{ .Values.postgreSQL.auth.password }}
+    database.url=jdbc:postgresql://postgresql/{{ .Values.postgresql.auth.database }}
+    database.username={{ .Values.postgresql.auth.username }}
+    database.password={{ .Values.postgresql.auth.password }}
     grpcServer.port= {{ .Values.gRPC.service.port }}
