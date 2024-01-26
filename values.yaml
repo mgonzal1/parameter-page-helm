@@ -40,7 +40,7 @@ gRPC:
     type: ClusterIP
     port: 50051
 
-postgreSQL:
+postgresql:
   # Create a postgresql database
   enabled: true
   image:
