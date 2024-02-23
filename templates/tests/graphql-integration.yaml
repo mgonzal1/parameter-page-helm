@@ -10,7 +10,7 @@ metadata:
 spec:
   containers:
     - name: flutter-test
-      image: "adregistry.fnal.gov/applications/parameter-page-integration-test::{{ .Values.API.image.tag}}"
+      image: "adregistry.fnal.gov/applications/parameter-page-integration-test:{{ .Values.API.image.tag}}"
       command: ["flutter", "test", "test/service_tests/graphql_parameter_page_service_test.dart"]
       volumeMounts:
         - mountPath: /home/test/app/.env
