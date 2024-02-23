@@ -54,4 +54,4 @@ data:
     database.url=jdbc:postgresql://parameter-page-postgresql/{{ .Values.postgresql.auth.database }}
     database.username={{ .Values.postgresql.auth.username }}
     database.password={{ .Values.postgresql.auth.password }}
-    grpcServer.port= {{ .Values.gRPC.service.port }}
+    grpcServer.port={{ .Values.gRPC.service.port }}

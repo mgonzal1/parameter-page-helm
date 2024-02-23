@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: parameter-page-api-svc
+  name: parameter-page-api
   labels:
     {{- include "parameter-page.labels" . | nindent 4 }}
     app.kubernetes.io/instance: parameter-page-api

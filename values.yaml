@@ -40,6 +40,7 @@ gRPC:
     type: ClusterIP
     port: 50051
 
+# Values from https://github.com/bitnami/charts/tree/main/bitnami/postgresql
 postgresql:
   # Create a postgresql database
   enabled: true
@@ -47,7 +48,7 @@ postgresql:
     registry: adregistry.fnal.gov
     repository: external/postgresql
   auth:
-    postgresPassword: "test"
-    username: "test"
-    password: "test"
-    database: "adbs"
+    postgresPassword: ""
+    username: ""
+    password: ""
+    database: ""

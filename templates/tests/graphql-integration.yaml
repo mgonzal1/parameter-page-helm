@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "parameter-page-test-integration"
+  name: "graphql-test-integration"
   labels:
     {{- include "parameter-page.labels" . | nindent 4 }}
     app.kubernetes.io/instance: parameter-page-test-integration
@@ -11,4 +11,13 @@ spec:
   containers:
     - name: flutter-test
       image: adregistry.fnal.gov/applications/parameter-page-test:latest
+      command: ["flutter", "test", "test/service_tests/graphql_parameter_page_service_test.dart"]
   restartPolicy: Never
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: param-page-integration-test-env
+data:
+  .env: |
+    PARAM_GRAPHQL_URL={{ .Values.API.URL  }}

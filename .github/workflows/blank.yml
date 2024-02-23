@@ -22,7 +22,7 @@ jobs:
       - name: Install Parameter Page
         run: |
           helm dependency build
-          helm upgrade --install parameter-page .
+          helm upgrade --install parameter-page . --set postgresql.auth.username=test --set postgresql.auth.password=test --set postgresql.auth.database=test
           kubectl wait --timeout=120s --for=condition=ready --all pod
           kubectl get pods
 
