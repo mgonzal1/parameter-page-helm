@@ -4,7 +4,7 @@ metadata:
   name: "graphql-test-integration"
   labels:
     {{- include "parameter-page.labels" . | nindent 4 }}
-    app.kubernetes.io/instance: parameter-page-test-integration
+    app.kubernetes.io/instance: graphql-test-integration
   annotations:
     "helm.sh/hook": test
 spec:
@@ -12,6 +12,15 @@ spec:
     - name: flutter-test
       image: adregistry.fnal.gov/applications/parameter-page-test:latest
       command: ["flutter", "test", "test/service_tests/graphql_parameter_page_service_test.dart"]
+      volumeMounts:
+        - mountPath: /home/test/app/.env
+          name: env-configmap
+          subPath: .env
+  volumes:
+    - configMap:
+        defaultMode: 420
+        name: param-page-integration-test-env
+      name: env-configmap
   restartPolicy: Never
 ---
 apiVersion: v1
